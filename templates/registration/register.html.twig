@@ -1,67 +1,58 @@
-{% extends 'base.html.twig' %}
+{% extends 'base_auth.html.twig' %}
 
 {% block title %}Inscription{% endblock %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('css/auth.css') }}">
-{% endblock %}
-
 {% block body %}
     <div class="auth-container">
-        <h1 class="auth-title">Create Account</h1>
-        
-        {% for flash_error in app.flashes('verify_email_error') %}
-            <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-        {% endfor %}
+        <h1 class="auth-title">Créer un compte</h1>
 
         {{ form_errors(registrationForm) }}
 
         {{ form_start(registrationForm, {'attr': {'class': 'auth-form'}}) }}
-            {# Champ de sélection du type d'utilisateur #}
+            {# User Type Selection #}
             <div class="form-group">
-                <label>Type de compte</label>
+                {{ form_label(registrationForm.userType) }}
                 <div class="user-type-selection">
                     {{ form_widget(registrationForm.userType) }}
                 </div>
+                {{ form_errors(registrationForm.userType) }}
             </div>
-            
-            {# Champs communs à tous les utilisateurs #}
+
+            {# Common Fields #}
             <div class="form-section">
                 <h3>Informations personnelles</h3>
                 <div class="form-row">
-                    <div class="form-group" style="flex: 1; margin: 0 10px;">
+                    <div class="form-group">
                         {{ form_label(registrationForm.Nom) }}
                         {{ form_widget(registrationForm.Nom) }}
                         {{ form_errors(registrationForm.Nom) }}
                     </div>
-                    <div class="form-group" style="flex: 1; margin: 0 10px;">
+                    <div class="form-group">
                         {{ form_label(registrationForm.prenom) }}
                         {{ form_widget(registrationForm.prenom) }}
                         {{ form_errors(registrationForm.prenom) }}
                     </div>
                 </div>
-                
                 <div class="form-group">
                     {{ form_label(registrationForm.numTel) }}
                     {{ form_widget(registrationForm.numTel) }}
                     {{ form_errors(registrationForm.numTel) }}
                 </div>
-                
                 <div class="form-group">
                     {{ form_label(registrationForm.email) }}
                     {{ form_widget(registrationForm.email) }}
                     {{ form_errors(registrationForm.email) }}
                 </div>
-                
                 <div class="form-group">
-                    {{ form_label(registrationForm.plainPassword, 'Password') }}
+                    {{ form_label(registrationForm.plainPassword, 'Mot de passe') }}
                     {{ form_widget(registrationForm.plainPassword) }}
                     {{ form_errors(registrationForm.plainPassword) }}
                 </div>
             </div>
-            
-            {# Champ Filière (commun aux Étudiants et Diplômés) #}
+
+            {# Conditional Fields #}
+
+            {# Filiere (common for etudiant & diplome) #}
             <div class="user-type-fields user-type-etudiant user-type-diplome" style="display: none;">
                 <div class="form-section">
                     <h3>Informations académiques</h3>
@@ -72,138 +63,123 @@
                     </div>
                 </div>
             </div>
-            
-            {# Champs spécifiques pour Étudiant #}
+
+            {# Etudiant specific #}
             <div class="user-type-fields user-type-etudiant" style="display: none;">
                 <div class="form-section">
-                    <h3>Informations étudiant</h3>
-                    <div id="etudiant_fields">
-                        <div class="form-group">
-                            {{ form_label(registrationForm.niveau) }}
-                            {{ form_widget(registrationForm.niveau) }}
-                            {{ form_errors(registrationForm.niveau) }}
-                        </div>
+                    <div class="form-group">
+                        {{ form_label(registrationForm.niveau) }}
+                        {{ form_widget(registrationForm.niveau) }}
+                        {{ form_errors(registrationForm.niveau) }}
                     </div>
                 </div>
             </div>
-            
-            {# Champs spécifiques pour Diplômé #}
+
+            {# Diplome specific #}
             <div class="user-type-fields user-type-diplome" style="display: none;">
                 <div class="form-section">
-                    <h3>Informations diplômé</h3>
-                    <div id="diplome_fields">
-                        <div class="form-group">
-                            {{ form_label(registrationForm.diplome) }}
-                            {{ form_widget(registrationForm.diplome) }}
-                            {{ form_errors(registrationForm.diplome) }}
-                        </div>
+                    <div class="form-group">
+                        {{ form_label(registrationForm.diplome) }}
+                        {{ form_widget(registrationForm.diplome) }}
+                        {{ form_errors(registrationForm.diplome) }}
                     </div>
                 </div>
             </div>
-            
-            {# Champs spécifiques pour Enseignant #}
+
+            {# Enseignant specific #}
             <div class="user-type-fields user-type-enseignant" style="display: none;">
                 <div class="form-section">
                     <h3>Informations enseignant</h3>
-                    <div id="enseignant_fields">
-                        <div class="form-group">
-                            {{ form_label(registrationForm.specialite) }}
-                            {{ form_widget(registrationForm.specialite) }}
-                            {{ form_errors(registrationForm.specialite) }}
-                        </div>
-                        <div class="form-group">
-                            {{ form_label(registrationForm.departement) }}
-                            {{ form_widget(registrationForm.departement) }}
-                            {{ form_errors(registrationForm.departement) }}
-                        </div>
-                        <div class="form-group checkbox-group">
-                            {{ form_widget(registrationForm.isResponsablePFE) }}
-                            {{ form_label(registrationForm.isResponsablePFE) }}
-                            {{ form_errors(registrationForm.isResponsablePFE) }}
-                        </div>
+                    <div class="form-group">
+                        {{ form_label(registrationForm.specialite) }}
+                        {{ form_widget(registrationForm.specialite) }}
+                        {{ form_errors(registrationForm.specialite) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(registrationForm.departement) }}
+                        {{ form_widget(registrationForm.departement) }}
+                        {{ form_errors(registrationForm.departement) }}
+                    </div>
+                    <div class="form-group checkbox-group">
+                        {{ form_widget(registrationForm.isResponsablePFE) }}
+                        {{ form_label(registrationForm.isResponsablePFE) }}
+                        {{ form_errors(registrationForm.isResponsablePFE) }}
                     </div>
                 </div>
             </div>
-            
-            {# Champs spécifiques pour Entreprise #}
+
+            {# Entreprise specific #}
             <div class="user-type-fields user-type-entreprise" style="display: none;">
                 <div class="form-section">
                     <h3>Informations entreprise</h3>
-                    <div id="entreprise_fields">
-                        <div class="form-group">
-                            {{ form_label(registrationForm.nomEntreprise) }}
-                            {{ form_widget(registrationForm.nomEntreprise) }}
-                            {{ form_errors(registrationForm.nomEntreprise) }}
-                        </div>
-                        <div class="form-group">
-                            {{ form_label(registrationForm.secteurActivite) }}
-                            {{ form_widget(registrationForm.secteurActivite) }}
-                            {{ form_errors(registrationForm.secteurActivite) }}
-                        </div>
-                        <div class="form-group">
-                            {{ form_label(registrationForm.adresse) }}
-                            {{ form_widget(registrationForm.adresse) }}
-                            {{ form_errors(registrationForm.adresse) }}
-                        </div>
-                        <div class="form-group">
-                            {{ form_label(registrationForm.siteWeb) }}
-                            {{ form_widget(registrationForm.siteWeb) }}
-                            {{ form_errors(registrationForm.siteWeb) }}
-                        </div>
-                        <div class="form-group">
-                            {{ form_label(registrationForm.responsableRH) }}
-                            {{ form_widget(registrationForm.responsableRH) }}
-                            {{ form_errors(registrationForm.responsableRH) }}
-                        </div>
+                    <div class="form-group">
+                        {{ form_label(registrationForm.nomEntreprise) }}
+                        {{ form_widget(registrationForm.nomEntreprise) }}
+                        {{ form_errors(registrationForm.nomEntreprise) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(registrationForm.secteurActivite) }}
+                        {{ form_widget(registrationForm.secteurActivite) }}
+                        {{ form_errors(registrationForm.secteurActivite) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(registrationForm.adresse) }}
+                        {{ form_widget(registrationForm.adresse) }}
+                        {{ form_errors(registrationForm.adresse) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(registrationForm.siteWeb) }}
+                        {{ form_widget(registrationForm.siteWeb) }}
+                        {{ form_errors(registrationForm.siteWeb) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(registrationForm.responsableRH) }}
+                        {{ form_widget(registrationForm.responsableRH) }}
+                        {{ form_errors(registrationForm.responsableRH) }}
                     </div>
                 </div>
             </div>
-            
-            <button type="submit" class="btn btn-primary">S'inscrire</button>
+
+            <button type="submit" class="auth-button">S'inscrire</button>
+
+            <div class="auth-links">
+                <p>Déjà inscrit ? <a href="{{ path('app_login') }}">Connectez-vous</a></p>
+            </div>
         {{ form_end(registrationForm) }}
-        
-        <div class="auth-link">
-            <p>Déjà inscrit ? <a href="{{ path('app_login') }}">Connectez-vous</a></p>
-        </div>
     </div>
 {% endblock %}
 
 {% block javascripts %}
-{{ parent() }}
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Fonction pour afficher/masquer les champs en fonction du type d'utilisateur sélectionné
-        function toggleUserTypeFields() {
-            // Récupérer le type d'utilisateur sélectionné
-            let userType = '';
-            const radioButtons = document.querySelectorAll('input[name="registration_form[userType]"]');
-            radioButtons.forEach(function(radio) {
-                if (radio.checked) {
-                    userType = radio.value;
-                }
-            });
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const userTypeRadios = document.querySelectorAll('input[name="registration_form[userType]"]');
             
-            // Masquer tous les champs spécifiques
-            document.querySelectorAll('.user-type-fields').forEach(function(el) {
-                el.style.display = 'none';
-            });
-            
-            // Afficher les champs correspondant au type sélectionné
-            if (userType) {
-                document.querySelectorAll('.user-type-' + userType).forEach(function(el) {
-                    el.style.display = 'block';
+            function showCorrectFields() {
+                // Find the currently selected user type
+                const selectedType = document.querySelector('input[name="registration_form[userType]"]:checked')?.value;
+
+                // Hide all conditional sections first
+                document.querySelectorAll('.user-type-fields').forEach(field => {
+                    field.style.display = 'none';
                 });
+
+                // If a type is selected, show the matching sections
+                if (selectedType) {
+                    document.querySelectorAll('.user-type-' + selectedType).forEach(field => {
+                        field.style.display = 'block';
+                    });
+                }
             }
-        }
-        
-        // Écouter les changements sur les boutons radio du type d'utilisateur
-        const radioButtons = document.querySelectorAll('input[name="registration_form[userType]"]');
-        radioButtons.forEach(function(radio) {
-            radio.addEventListener('change', toggleUserTypeFields);
+
+            // When a radio button is changed, update the form
+            userTypeRadios.forEach(radio => {
+                radio.addEventListener('change', showCorrectFields);
+            });
+
+            // Force the check to run after a very short delay
+            // This helps ensure it runs after the browser has processed the form's state on reload
+            setTimeout(showCorrectFields, 50);
         });
-        
-        // Exécuter une fois au chargement de la page
-        toggleUserTypeFields();
-    });
-</script>
+    </script>
 {% endblock %}

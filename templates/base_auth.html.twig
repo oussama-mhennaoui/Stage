@@ -14,14 +14,9 @@
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
     </head>
-    <body class="flex flex-col min-h-screen bg-white">
-        {{ include('partials/_navbar.html.twig') }}
-
-        <main class="flex-grow p-0">
+    <body class="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+        <main class="w-full max-w-md">
             {% block body %}{% endblock %}
         </main>
-
-        {{ include('partials/_footer.html.twig') }}
-
     </body>
 </html>

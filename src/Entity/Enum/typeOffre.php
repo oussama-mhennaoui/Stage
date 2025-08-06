@@ -2,9 +2,12 @@
 
 namespace App\Entity\Enum;
 
-enum typeOffre: string
+/**
+ * Enum representing the type of offer.
+ */
+enum TypeOffre: string
 {
     case STAGE_ETE = 'stage été';
     case STAGE_PFE = 'stage pfe';
-    case EMPLOIS = 'emplois';
+    case EMPLOIS    = 'emplois';
 }

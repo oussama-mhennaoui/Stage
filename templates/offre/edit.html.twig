@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Offre{% endblock %}
+
+{% block body %}
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold mb-6">Edit Offre</h1>
+
+        {{ include('offre/_form.html.twig', {'button_label': 'Update'}) }}
+
+        <a href="{{ path('app_offre_index') }}" class="text-gray-600 hover:underline mt-4 inline-block">back to list</a>
+
+        <div class="mt-4">
+            {{ include('offre/_delete_form.html.twig') }}
+        </div>
+    </div>
+{% endblock %}

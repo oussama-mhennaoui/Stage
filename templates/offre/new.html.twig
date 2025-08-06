@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Offre{% endblock %}
+
+{% block body %}
+    <div class="w-full px-4 py-8">
+        <h1 class="text-3xl font-bold mb-6">Create new Offre</h1>
+
+        {{ include('offre/_form.html.twig') }}
+
+        <a href="{{ path('app_offre_index') }}" class="text-gray-600 hover:underline mt-4 inline-block">back to list</a>
+    </div>
+{% endblock %}

@@ -2,9 +2,12 @@
 
 namespace App\Entity;
 
-use App\Entity\Enum\typeOffre;
+use App\Entity\Enum\TypeOffre;
 use App\Entity\Entreprise;
+use App\Entity\Candidature;
 use App\Repository\OffreRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OffreRepository::class)]
@@ -18,18 +21,26 @@ class Offre
     #[ORM\Column(length: 255)]
     private ?string $titre = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type: 'text')]
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
     private ?string $duree = null;
 
-    #[ORM\Column(type: 'string', enumType: typeOffre::class)]
-    private ?typeOffre $typeOffre = null;
+    #[ORM\Column(type: 'string', enumType: TypeOffre::class)]
+    private ?TypeOffre $typeOffre = null;
 
     #[ORM\ManyToOne(inversedBy: 'offres')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Entreprise $entreprise = null;
+
+    #[ORM\OneToMany(mappedBy: 'offre', targetEntity: Candidature::class, orphanRemoval: true)]
+    private Collection $candidatures;
+
+    public function __construct()
+    {
+        $this->candidatures = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -72,12 +83,12 @@ class Offre
         return $this;
     }
 
-    public function getTypeOffre(): ?typeOffre
+    public function getTypeOffre(): ?TypeOffre
     {
         return $this->typeOffre;
     }
 
-    public function setTypeOffre(typeOffre $typeOffre): static
+    public function setTypeOffre(TypeOffre $typeOffre): static
     {
         $this->typeOffre = $typeOffre;
 
@@ -92,6 +103,36 @@ class Offre
     public function setEntreprise(?Entreprise $entreprise): static
     {
         $this->entreprise = $entreprise;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Candidature>
+     */
+    public function getCandidatures(): Collection
+    {
+        return $this->candidatures;
+    }
+
+    public function addCandidature(Candidature $candidature): static
+    {
+        if (!$this->candidatures->contains($candidature)) {
+            $this->candidatures->add($candidature);
+            $candidature->setOffre($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCandidature(Candidature $candidature): static
+    {
+        if ($this->candidatures->removeElement($candidature)) {
+            // set the owning side to null (unless already changed)
+            if ($candidature->getOffre() === $this) {
+                $candidature->setOffre(null);
+            }
+        }
 
         return $this;
     }

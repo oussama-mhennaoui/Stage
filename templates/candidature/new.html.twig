@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Postuler à l'offre{% endblock %}
+
+{% block body %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-2xl font-bold mb-4">Postuler à l'offre</h1>
+    <div class="bg-white shadow rounded-lg p-6 max-w-lg mx-auto">
+        <h2 class="text-xl font-semibold text-blue-700 mb-2">{{ offre.titre }}</h2>
+        <p class="mb-2">{{ offre.description }}</p>
+        <p class="text-sm text-gray-500 mb-1"><span class="font-medium">Durée :</span> {{ offre.duree }}</p>
+        <p class="text-sm text-gray-500 mb-1"><span class="font-medium">Type :</span> {{ offre.typeOffre.value|capitalize }}</p>
+        <p class="text-sm text-gray-500 mb-3"><span class="font-medium">Entreprise :</span> {{ offre.entreprise.nom }}</p>
+        {% for message in app.flashes('success') %}
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded mb-4">{{ message }}</div>
+        {% endfor %}
+        {% for message in app.flashes('error') %}
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4">{{ message }}</div>
+        {% endfor %}
+        {# Show all form errors clearly #}
+        {% if form.vars.errors|length > 0 %}
+            <div class="bg-red-200 border border-red-600 text-red-900 px-4 py-2 rounded mb-4">
+                <ul>
+                    {% for error in form.vars.errors %}
+                        <li>{{ error.message }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        {{ form_errors(form) }}
+        {{ form_start(form, {'method': 'POST', 'enctype': 'multipart/form-data'}) }}
+            <div class="mb-4">
+                {{ form_label(form.cv) }}
+                {{ form_widget(form.cv, {'attr': {'class': 'block w-full mt-1 border border-gray-300 rounded px-3 py-2'}}) }}
+                {{ form_errors(form.cv) }}
+            </div>
+            <div class="mb-4">
+                {{ form_label(form.lettreMotivation) }}
+                {{ form_widget(form.lettreMotivation, {'attr': {'class': 'block w-full mt-1 border border-gray-300 rounded px-3 py-2'}}) }}
+                {{ form_errors(form.lettreMotivation) }}
+            </div>
+            <button type="submit" class="w-full bg-blue-600 text-white px-4 py-2 rounded-md font-medium hover:bg-blue-700 transition">Envoyer la candidature</button>
+        {{ form_end(form) }}
+    </div>
+</div>
+{% endblock %}

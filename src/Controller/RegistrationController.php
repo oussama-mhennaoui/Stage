@@ -41,6 +41,7 @@ class RegistrationController extends AbstractController
         // Créer un formulaire d'inscription sans lier d'entité pour l'instant
         $form = $this->createForm(RegistrationFormType::class);
         $form->handleRequest($request);
+        $userType = null; // Initialize userType
 
         if ($form->isSubmitted()) {
             // Validation personnalisée pour les champs conditionnels
@@ -109,6 +110,7 @@ class RegistrationController extends AbstractController
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form,
+            'userType' => $userType // Pass userType to the template
         ]);
     }
     
@@ -260,9 +262,7 @@ class RegistrationController extends AbstractController
 
         // validate email confirmation link, sets User::isVerified=true and persists
         try {
-            /** @var User $user */
-            $user = $this->getUser();
-            $this->emailVerifier->handleEmailConfirmation($request, $user);
+            $this->emailVerifier->handleEmailConfirmation($request, $this->getUser());
         } catch (VerifyEmailExceptionInterface $exception) {
             $this->addFlash('verify_email_error', $translator->trans($exception->getReason(), [], 'VerifyEmailBundle'));
 
@@ -272,6 +272,6 @@ class RegistrationController extends AbstractController
         // @TODO Change the redirect on success and handle or remove the flash message in your templates
         $this->addFlash('success', 'Your email address has been verified.');
 
-        return $this->redirectToRoute('app_admin');
+        return $this->redirectToRoute('app_home');
     }
 }
