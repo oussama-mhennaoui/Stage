@@ -16,7 +16,8 @@
                     <th class="py-3 px-4 text-left">Description</th>
                     <th class="py-3 px-4 text-left">Duree</th>
                     <th class="py-3 px-4 text-left">TypeOffre</th>
-                    <th class="py-3 px-4 text-left">actions</th>
+                    <th class="py-3 px-4 text-left">Candidatures</th>
+                        <th class="py-3 px-4 text-left">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -27,7 +28,10 @@
                     <td class="py-3 px-4">{{ offre.description }}</td>
                     <td class="py-3 px-4">{{ offre.duree }}</td>
                     <td class="py-3 px-4">{{ offre.typeOffre.value }}</td>
-                    <td class="py-3 px-4 flex items-center">
+                    <td class="py-3 px-4">
+                            <a href="{{ path('app_offre_candidatures', {'id': offre.id}) }}" class="bg-indigo-600 text-white px-3 py-1 rounded-md text-sm hover:bg-indigo-700">Voir ({{ offre.candidatures|length }})</a>
+                        </td>
+                        <td class="py-3 px-4 flex items-center">
                         <a href="{{ path('app_offre_edit', {'id': offre.id}) }}" class="text-yellow-600 hover:underline">edit</a>
                         <div class="ml-2">
                             {{ include('offre/_delete_form.html.twig') }}

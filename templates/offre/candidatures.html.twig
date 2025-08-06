@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Candidatures pour l'offre {{ offre.titre }}{% endblock %}
+
+{% block body %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-6">Candidatures – {{ offre.titre }}</h1>
+    <a href="{{ path('app_offre_index') }}" class="mb-4 inline-block text-blue-600 hover:underline">&larr; Retour à vos offres</a>
+
+    <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+        <thead class="bg-gray-200">
+            <tr>
+                <th class="py-3 px-4 text-left">Candidat</th>
+                <th class="py-3 px-4 text-left">CV</th>
+                <th class="py-3 px-4 text-left">Lettre</th>
+                <th class="py-3 px-4 text-left">Etat</th>
+                <th class="py-3 px-4 text-left">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for cand in candidatures %}
+            <tr class="border-b">
+                <td class="py-3 px-4">{{ cand.candidat.email }}</td>
+                <td class="py-3 px-4">
+                    {% if cand.cv %}
+                        <a href="{{ asset(cand.cv) }}" target="_blank" class="text-blue-600 hover:underline">Télécharger</a>
+                    {% else %}-{% endif %}
+                </td>
+                <td class="py-3 px-4">
+                    {% if cand.lettreMotivation %}
+                        <a href="{{ asset(cand.lettreMotivation) }}" target="_blank" class="text-blue-600 hover:underline">Télécharger</a>
+                    {% else %}-{% endif %}
+                </td>
+                <td class="py-3 px-4">{{ cand.etatCandidature|capitalize }}</td>
+                <td class="py-3 px-4 space-x-2">
+                    {% if cand.etatCandidature == 'en cours' %}
+                        <form method="post" action="{{ path('app_candidature_accept', {'id': cand.id}) }}" style="display:inline">
+                            <input type="hidden" name="_token" value="{{ csrf_token('accept' ~ cand.id) }}">
+                            <button class="bg-green-600 text-white px-3 py-1 rounded-md text-sm hover:bg-green-700" onclick="return confirm('Accepter cette candidature ?');">Accepter</button>
+                        </form>
+                        <form method="post" action="{{ path('app_candidature_reject', {'id': cand.id}) }}" style="display:inline">
+                            <input type="hidden" name="_token" value="{{ csrf_token('reject' ~ cand.id) }}">
+                            <button class="bg-red-600 text-white px-3 py-1 rounded-md text-sm hover:bg-red-700" onclick="return confirm('Rejeter cette candidature ?');">Rejeter</button>
+                        </form>
+                    {% else %}-{% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5" class="py-3 px-4 text-center">Aucune candidature</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

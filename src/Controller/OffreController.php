@@ -14,6 +14,20 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/offre')]
 class OffreController extends AbstractController
 {
+    #[Route('/{id}/candidatures', name: 'app_offre_candidatures', methods: ['GET'])]
+    public function candidatures(Offre $offre): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ENTREPRISE');
+        // Ensure logged-in entreprise owns the offer
+        if ($offre->getEntreprise() !== $this->getUser()) {
+            throw $this->createAccessDeniedException('Vous ne pouvez pas consulter ces candidatures.');
+        }
+        return $this->render('offre/candidatures.html.twig', [
+            'offre' => $offre,
+            'candidatures' => $offre->getCandidatures(),
+        ]);
+    }
+
     #[Route('/public', name: 'app_offre_public', methods: ['GET'])]
     public function publicIndex(OffreRepository $offreRepository): Response
     {

@@ -98,4 +98,30 @@ class CandidatureController extends AbstractController
             'form' => $form->createView()
         ]);
     }
+
+    #[Route('/candidature/{id}/accept', name: 'app_candidature_accept', methods: ['POST'])]
+    public function accept(Candidature $candidature, EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ENTREPRISE');
+        if ($candidature->getOffre()->getEntreprise() !== $this->getUser()) {
+            throw $this->createAccessDeniedException();
+        }
+        $candidature->setEtatCandidature('acceptée');
+        $entityManager->flush();
+        $this->addFlash('success', 'Candidature acceptée.');
+        return $this->redirectToRoute('app_offre_candidatures', ['id' => $candidature->getOffre()->getId()]);
+    }
+
+    #[Route('/candidature/{id}/reject', name: 'app_candidature_reject', methods: ['POST'])]
+    public function reject(Candidature $candidature, EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ENTREPRISE');
+        if ($candidature->getOffre()->getEntreprise() !== $this->getUser()) {
+            throw $this->createAccessDeniedException();
+        }
+        $candidature->setEtatCandidature('rejetée');
+        $entityManager->flush();
+        $this->addFlash('success', 'Candidature rejetée.');
+        return $this->redirectToRoute('app_offre_candidatures', ['id' => $candidature->getOffre()->getId()]);
+    }
 }
