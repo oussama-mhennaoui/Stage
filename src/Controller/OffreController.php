@@ -44,6 +44,15 @@ class OffreController extends AbstractController
             'types' => $types,
         ]);
     }
+
+    #[Route('/public/{id}', name: 'app_offre_public_show', methods: ['GET'])]
+    public function publicShow(Offre $offre): Response
+    {
+        // No role restriction: open to all, including unauthenticated users
+        return $this->render('offre/public_show.html.twig', [
+            'offre' => $offre,
+        ]);
+    }
     #[Route('/', name: 'app_offre_index', methods: ['GET'])]
     public function index(OffreRepository $offreRepository): Response
     {

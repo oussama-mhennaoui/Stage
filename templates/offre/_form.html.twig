@@ -1,4 +1,10 @@
-{{ form_start(form, {'attr': {'class': 'w-full'}}) }}
+{% set form_attr = {
+    'class': 'w-full',
+    'data-controller': 'offer-type'
+} %}
+
+{{ form_start(form, {'attr': form_attr}) }}
+<!-- Debug: Form start with data-controller="#{form_attr['data-controller']}" -->
     <div class="space-y-6">
         <div>
             {{ form_label(form.titre, 'Titre', {'label_attr': {'class': 'block text-gray-700 font-bold mb-2'}}) }}
@@ -11,11 +17,22 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
                 {{ form_label(form.duree, 'Durée', {'label_attr': {'class': 'block text-gray-700 font-bold mb-2'}}) }}
-                {{ form_widget(form.duree, {'attr': {'class': 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}}) }}
+                {% set duree_attr = {
+                    'class': 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline',
+                    'data-offer-type-target': 'durationField'
+                } %}
+                {{ form_widget(form.duree, {'attr': duree_attr}) }}
+                <!-- Debug: Durée field with data-offer-type-target="#{duree_attr['data-offer-type-target']}" -->
             </div>
             <div>
                 {{ form_label(form.typeOffre, 'Type d\'offre', {'label_attr': {'class': 'block text-gray-700 font-bold mb-2'}}) }}
-                {{ form_widget(form.typeOffre, {'attr': {'class': 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}}) }}
+                {% set type_offre_attr = {
+                    'class': 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline',
+                    'data-offer-type-target': 'select',
+                    'data-action': 'change->offer-type#updateDurationField'
+                } %}
+                {{ form_widget(form.typeOffre, {'attr': type_offre_attr}) }}
+                <!-- Debug: Type Offre field with data-action="#{type_offre_attr['data-action']}" -->
             </div>
         </div>
         <div class="flex justify-end">

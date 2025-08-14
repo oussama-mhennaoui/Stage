@@ -11,9 +11,29 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\Mime\Address;
+use App\Repository\CandidatureRepository;
 
 class CandidatureController extends AbstractController
 {
+    #[Route('/mes-candidatures', name: 'app_mes_candidatures', methods: ['GET'])]
+    public function mesCandidatures(CandidatureRepository $candidatureRepository): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ETUDIANT');
+        
+        $candidatures = $candidatureRepository->findBy(
+            ['candidat' => $this->getUser()],
+            ['createdAt' => 'DESC']
+        );
+
+        return $this->render('candidature/mes_candidatures.html.twig', [
+            'candidatures' => $candidatures,
+        ]);
+    }
+
+    
     #[Route('/candidature/new/{offreId}', name: 'app_candidature_new', methods: ['GET', 'POST'])]
     public function new(Request $request, $offreId, OffreRepository $offreRepository, EntityManagerInterface $entityManager): Response
     {
@@ -100,7 +120,7 @@ class CandidatureController extends AbstractController
     }
 
     #[Route('/candidature/{id}/accept', name: 'app_candidature_accept', methods: ['POST'])]
-    public function accept(Candidature $candidature, EntityManagerInterface $entityManager): Response
+    public function accept(Candidature $candidature, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ENTREPRISE');
         if ($candidature->getOffre()->getEntreprise() !== $this->getUser()) {
@@ -108,12 +128,29 @@ class CandidatureController extends AbstractController
         }
         $candidature->setEtatCandidature('acceptée');
         $entityManager->flush();
-        $this->addFlash('success', 'Candidature acceptée.');
+
+        // Send email notification
+        $email = (new TemplatedEmail())
+            ->from(new Address('noreply@yourdomain.com', 'Plateforme de Stages'))
+            ->to($candidature->getCandidat()->getEmail())
+            ->subject('Votre candidature a été acceptée')
+            ->htmlTemplate('emails/candidature_status.html.twig')
+            ->context([
+                'candidature' => $candidature,
+            ]);
+
+        try {
+            $mailer->send($email);
+            $this->addFlash('success', 'Candidature acceptée et notification envoyée.');
+        } catch (\Exception $e) {
+            $this->addFlash('warning', 'Candidature acceptée mais erreur lors de l\'envoi de l\'email de notification.');
+        }
+
         return $this->redirectToRoute('app_offre_candidatures', ['id' => $candidature->getOffre()->getId()]);
     }
 
     #[Route('/candidature/{id}/reject', name: 'app_candidature_reject', methods: ['POST'])]
-    public function reject(Candidature $candidature, EntityManagerInterface $entityManager): Response
+    public function reject(Candidature $candidature, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ENTREPRISE');
         if ($candidature->getOffre()->getEntreprise() !== $this->getUser()) {
@@ -121,7 +158,24 @@ class CandidatureController extends AbstractController
         }
         $candidature->setEtatCandidature('rejetée');
         $entityManager->flush();
-        $this->addFlash('success', 'Candidature rejetée.');
+
+        // Send email notification
+        $email = (new TemplatedEmail())
+            ->from(new Address('noreply@yourdomain.com', 'Plateforme de Stages'))
+            ->to($candidature->getCandidat()->getEmail())
+            ->subject('Mise à jour de votre candidature')
+            ->htmlTemplate('emails/candidature_status.html.twig')
+            ->context([
+                'candidature' => $candidature,
+            ]);
+
+        try {
+            $mailer->send($email);
+            $this->addFlash('success', 'Candidature rejetée et notification envoyée.');
+        } catch (\Exception $e) {
+            $this->addFlash('warning', 'Candidature rejetée mais erreur lors de l\'envoi de l\'email de notification.');
+        }
+
         return $this->redirectToRoute('app_offre_candidatures', ['id' => $candidature->getOffre()->getId()]);
     }
 }

@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ offre.titre }}{% endblock %}
+
+{% block body %}
+<div class="container mx-auto px-4 py-8">
+    <div class="bg-white shadow-md rounded-lg p-6">
+        <div class="border-b pb-4 mb-6">
+            <h1 class="text-2xl font-bold text-gray-800">{{ offre.titre }}</h1>
+            <p class="text-gray-600 mt-2">
+                Publiée par <span class="font-semibold">{{ offre.entreprise.nom }}</span>
+            </p>
+            
+            {% if offre.typeOffre %}
+                <div class="mt-4">
+                    <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
+                        {{ offre.typeOffre.value }}
+                    </span>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="md:col-span-2">
+                {% if offre.description %}
+                    <div class="mb-6">
+                        <h2 class="text-xl font-semibold mb-3">Description du poste</h2>
+                        <div class="prose max-w-none">
+                            {{ offre.description|nl2br }}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="md:col-span-1">
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h2 class="text-lg font-semibold mb-4">Détails de l'offre</h2>
+                    
+                    {% if offre.duree %}
+                        <div class="mb-3">
+                            <h3 class="font-medium text-gray-700">Durée</h3>
+                            <p class="text-gray-600">{{ offre.duree }}</p>
+                        </div>
+                    {% endif %}
+                </div>
+
+                {% if is_granted('ROLE_ETUDIANT') or is_granted('ROLE_DIPLOME') %}
+                    {% set hasApplied = false %}
+                    {% for candidature in app.user.candidatures %}
+                        {% if candidature.offre.id == offre.id %}
+                            {% set hasApplied = true %}
+                        {% endif %}
+                    {% endfor %}
+
+                    <div class="mt-6">
+                        {% if hasApplied %}
+                            <button disabled class="w-full bg-gray-300 text-white font-bold py-2 px-4 rounded cursor-not-allowed">
+                                Candidature déjà soumise
+                            </button>
+                        {% else %}
+                            <a href="{{ path('app_candidature_new', {'offreId': offre.id}) }}" 
+                               class="block w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center">
+                                Postuler maintenant
+                            </a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

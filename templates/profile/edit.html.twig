@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier mon profil{% endblock %}
+
+{% block body %}
+<div class="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+    <div class="md:flex md:items-center md:justify-between mb-6">
+        <div class="flex-1 min-w-0">
+            <h1 class="text-2xl font-bold text-gray-900">Modifier mon profil</h1>
+        </div>
+        <div class="mt-4 flex md:mt-0 md:ml-4">
+            <a href="{{ path('app_profile') }}" 
+               class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                Retour au profil
+            </a>
+        </div>
+    </div>
+
+    <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+        <div class="px-4 py-5 sm:p-6">
+            {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+                <div class="space-y-6">
+                    <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                        <div class="sm:col-span-3">
+                            {{ form_label(form.nom, 'Nom', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                            {{ form_widget(form.nom, {'attr': {'class': 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm'}}) }}
+                            {{ form_errors(form.nom) }}
+                        </div>
+
+                        <div class="sm:col-span-3">
+                            {{ form_label(form.prenom, 'Prénom', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                            {{ form_widget(form.prenom, {'attr': {'class': 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm'}}) }}
+                            {{ form_errors(form.prenom) }}
+                        </div>
+
+                        <div class="sm:col-span-6">
+                            {{ form_label(form.email, 'Email', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                            {{ form_widget(form.email, {'attr': {'class': 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm'}}) }}
+                            {{ form_errors(form.email) }}
+                        </div>
+
+                        <div class="sm:col-span-6">
+                            {{ form_label(form.numTel, 'Téléphone', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                            {{ form_widget(form.numTel, {'attr': {'class': 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm'}}) }}
+                            {{ form_errors(form.numTel) }}
+                        </div>
+
+                        <div class="sm:col-span-6">
+                            <h3 class="text-lg font-medium leading-6 text-gray-900">Changer le mot de passe</h3>
+                            <p class="mt-1 text-sm text-gray-500">Laissez ces champs vides pour conserver le mot de passe actuel.</p>
+                        </div>
+
+                        <div class="sm:col-span-6">
+                            {{ form_label(form.plainPassword.first, 'Nouveau mot de passe', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                            {{ form_widget(form.plainPassword.first, {'attr': {'class': 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm'}}) }}
+                            {{ form_errors(form.plainPassword.first) }}
+                        </div>
+
+                        <div class="sm:col-span-6">
+                            {{ form_label(form.plainPassword.second, 'Confirmer le nouveau mot de passe', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                            {{ form_widget(form.plainPassword.second, {'attr': {'class': 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm'}}) }}
+                            {{ form_errors(form.plainPassword.second) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-5">
+                    <div class="flex justify-end">
+                        <a href="{{ path('app_profile') }}" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            Annuler
+                        </a>
+                        <button type="submit" class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            Enregistrer les modifications
+                        </button>
+                    </div>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+{% endblock %}

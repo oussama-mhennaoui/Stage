@@ -16,11 +16,29 @@ class OffreType extends AbstractType
         $builder
             ->add('titre')
             ->add('description')
-            ->add('duree')
             ->add('typeOffre', EnumType::class, [
-                'class' => TypeOffre::class
+                'class' => TypeOffre::class,
+                'choice_label' => function (TypeOffre $type) {
+                    return ucfirst($type->value);
+                },
+                'placeholder' => 'Sélectionner un type',
+                'required' => true,
+                'attr' => [
+                    'class' => 'offer-type-selector',
+                    'data-controller' => 'offer-type'
+                ]
             ])
-        ;
+            ->add('duree', null, [
+                'label' => 'Durée (en mois)',
+                'required' => false,
+                'attr' => [
+                    'class' => 'duration-field',
+                    'min' => 1,
+                    'max' => 12,
+                    'data-offer-type-target' => 'durationField',
+                    'data-action' => 'change->offer-type#toggleDurationField'
+                ]
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -12,6 +12,8 @@
                     <a href="{{ path('app_admin') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
                     {% if is_granted('ROLE_ENTREPRISE') %}
                         <a href="{{ path('app_offre_index') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Manage Offers</a>
+                    {% elseif is_granted('ROLE_ETUDIANT') or is_granted('ROLE_DIPLOME') %}
+                        <a href="{{ path('app_mes_candidatures') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Mes Candidatures</a>
                     {% endif %}
                     <a href="{{ path('app_logout') }}" class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700">Logout</a>
                 {% else %}

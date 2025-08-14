@@ -1,0 +1,17 @@
+{% extends 'emails/base.html.twig' %}
+
+{% block content %}
+    <h1>Mise à jour de votre candidature</h1>
+    
+    <p>Bonjour {{ candidature.candidat.prenom }},</p>
+    
+    {% if candidature.etatCandidature == 'acceptée' %}
+        <p>Félicitations ! Votre candidature pour le poste de <strong>{{ candidature.offre.titre }}</strong> chez <strong>{{ candidature.offre.entreprise.nom }}</strong> a été acceptée.</p>
+        <p>L'entreprise prendra contact avec vous prochainement pour les prochaines étapes.</p>
+    {% else %}
+        <p>Nous regrettons de vous informer que votre candidature pour le poste de <strong>{{ candidature.offre.titre }}</strong> chez <strong>{{ candidature.offre.entreprise.nom }}</strong> n'a pas été retenue.</p>
+        <p>Nous vous remercions pour l'intérêt que vous avez porté à cette offre et vous souhaitons bonne chance dans vos recherches.</p>
+    {% endif %}
+    
+    <p>Cordialement,<br>L'équipe de notre plateforme</p>
+{% endblock %}

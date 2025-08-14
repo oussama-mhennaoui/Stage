@@ -9,6 +9,7 @@ use App\Repository\OffreRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: OffreRepository::class)]
 class Offre
@@ -19,15 +20,28 @@ class Offre
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Le titre est obligatoire')]
     private ?string $titre = null;
 
     #[ORM\Column(type: 'text')]
+    #[Assert\NotBlank(message: 'La description est obligatoire')]
     private ?string $description = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $duree = null;
+    #[ORM\Column(nullable: true)]
+    #[Assert\Expression(
+        "value !== null || this.getTypeOffre() !== 'stage_ete' && this.getTypeOffre() !== 'stage_pfe'",
+        message: 'La durée est obligatoire pour les stages'
+    )]
+    #[Assert\Range(
+        min: 1,
+        max: 12,
+        notInRangeMessage: 'La durée doit être comprise entre {{ min }} et {{ max }} mois',
+        groups: ['stage_duration']
+    )]
+    private ?int $duree = null;
 
     #[ORM\Column(type: 'string', enumType: TypeOffre::class)]
+    #[Assert\NotBlank(message: 'Le type d\'offre est obligatoire')]
     private ?TypeOffre $typeOffre = null;
 
     #[ORM\ManyToOne(inversedBy: 'offres')]
