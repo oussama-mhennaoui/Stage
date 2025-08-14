@@ -1,4 +1,4 @@
-<nav class="bg-white shadow-lg w-full">
+<nav class="bg-white shadow-lg w-full" id="main-nav">
     <div class="flex justify-between items-center h-16 px-4">
             <div class="flex">
                 <a href="{{ path('app_home') }}" class="flex items-center">
@@ -15,7 +15,57 @@
                     {% elseif is_granted('ROLE_ETUDIANT') or is_granted('ROLE_DIPLOME') %}
                         <a href="{{ path('app_mes_candidatures') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Mes Candidatures</a>
                     {% endif %}
-                    <a href="{{ path('app_logout') }}" class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700">Logout</a>
+                    <div class="relative" id="user-menu">
+                        <button id="user-menu-button" class="flex items-center space-x-2 text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium focus:outline-none">
+                            <span>{{ app.user.prenom }} {{ app.user.nom }}</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div id="user-dropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 hidden">
+                            <a href="{{ path('app_profile') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Mon Profil</a>
+                            <a href="{{ path('app_profile_edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Modifier mon profil</a>
+                            <div class="border-t border-gray-100 my-1"></div>
+                            <a href="{{ path('app_logout') }}" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">Déconnexion</a>
+                        </div>
+                    </div>
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const button = document.getElementById('user-menu-button');
+                            const dropdown = document.getElementById('user-dropdown');
+                            
+                            if (button && dropdown) {
+                                // Toggle dropdown on button click
+                                button.addEventListener('click', function(e) {
+                                    e.stopPropagation();
+                                    const isHidden = dropdown.classList.contains('hidden');
+                                    closeAllDropdowns();
+                                    if (isHidden) {
+                                        dropdown.classList.remove('hidden');
+                                    }
+                                });
+                                
+                                // Close when clicking outside
+                                document.addEventListener('click', function(e) {
+                                    if (!e.target.closest('#user-menu')) {
+                                        dropdown.classList.add('hidden');
+                                    }
+                                });
+                                
+                                // Close when pressing Escape
+                                document.addEventListener('keydown', function(e) {
+                                    if (e.key === 'Escape') {
+                                        dropdown.classList.add('hidden');
+                                    }
+                                });
+                            }
+                            
+                            function closeAllDropdowns() {
+                                const dropdowns = document.querySelectorAll('.absolute[class*="w-48"]');
+                                dropdowns.forEach(d => d.classList.add('hidden'));
+                            }
+                        });
+                    </script>
                 {% else %}
                     <a href="{{ path('app_login') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Sign In</a>
                     <a href="{{ path('app_register') }}" class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700">Sign Up</a>
