@@ -11,7 +11,7 @@
         {% endblock %}
 
         {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
+            {% block importmap %}{{ importmap(['app', 'dropdown']) }}{% endblock %}
         {% endblock %}
     </head>
     <body class="flex flex-col min-h-screen bg-white">

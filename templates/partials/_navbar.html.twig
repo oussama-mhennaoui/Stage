@@ -29,43 +29,7 @@
                             <a href="{{ path('app_logout') }}" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">Déconnexion</a>
                         </div>
                     </div>
-                    <script>
-                        document.addEventListener('DOMContentLoaded', function() {
-                            const button = document.getElementById('user-menu-button');
-                            const dropdown = document.getElementById('user-dropdown');
-                            
-                            if (button && dropdown) {
-                                // Toggle dropdown on button click
-                                button.addEventListener('click', function(e) {
-                                    e.stopPropagation();
-                                    const isHidden = dropdown.classList.contains('hidden');
-                                    closeAllDropdowns();
-                                    if (isHidden) {
-                                        dropdown.classList.remove('hidden');
-                                    }
-                                });
-                                
-                                // Close when clicking outside
-                                document.addEventListener('click', function(e) {
-                                    if (!e.target.closest('#user-menu')) {
-                                        dropdown.classList.add('hidden');
-                                    }
-                                });
-                                
-                                // Close when pressing Escape
-                                document.addEventListener('keydown', function(e) {
-                                    if (e.key === 'Escape') {
-                                        dropdown.classList.add('hidden');
-                                    }
-                                });
-                            }
-                            
-                            function closeAllDropdowns() {
-                                const dropdowns = document.querySelectorAll('.absolute[class*="w-48"]');
-                                dropdowns.forEach(d => d.classList.add('hidden'));
-                            }
-                        });
-                    </script>
+
                 {% else %}
                     <a href="{{ path('app_login') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Sign In</a>
                     <a href="{{ path('app_register') }}" class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700">Sign Up</a>

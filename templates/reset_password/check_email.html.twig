@@ -8,12 +8,17 @@
         <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
             Vérifiez votre email
         </h2>
+        <div class="mt-2 text-center text-sm text-gray-600">
+            <p>Un email a été envoyé contenant un lien que vous pouvez utiliser pour réinitialiser votre mot de passe.</p>
+            {% if resetToken is defined and resetToken.expiresAt is defined %}
+                <p class="mt-2">Ce lien expirera dans {{ resetToken.expiresAt|date('g') }} heure(s).</p>
+            {% endif %}
+        </div>
         <p class="mt-2 text-center text-sm text-gray-600">
-            Un email a été envoyé contenant un lien que vous pouvez utiliser pour réinitialiser votre mot de passe.
-            Ce lien expirera dans {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
-        </p>
-        <p class="mt-2 text-center text-sm text-gray-600">
-            Si vous ne recevez pas d'email, veuillez vérifier votre dossier de spam ou <a href="{{ path('app_forgot_password_request') }}" class="text-blue-600 hover:text-blue-500">réessayer</a>.
+            Si vous ne recevez pas d'email, veuillez vérifier votre dossier de spam ou 
+            <a href="{{ path('app_forgot_password_request') }}" class="font-medium text-blue-600 hover:text-blue-500">
+                réessayer
+            </a>.
         </p>
     </div>
 

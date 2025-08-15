@@ -151,11 +151,15 @@ class ResetPasswordController extends AbstractController
         $email = (new TemplatedEmail())
             ->from(new Address('noreply@yourdomain.com', 'GestionOffre'))
             ->to($user->getEmail())
-            ->subject('Your password reset request')
+            ->subject('Réinitialisation de votre mot de passe')
             ->htmlTemplate('reset_password/email.html.twig')
             ->context([
-                'resetToken' => $resetToken,
+                'resetToken' => [
+                    'token' => $resetToken->getToken(),
+                    'expiresAt' => $resetToken->getExpiresAt()
+                ],
                 'tokenLifetime' => $this->resetPasswordHelper->getTokenLifetime(),
+                'user' => $user
             ])
         ;
 
@@ -170,6 +174,11 @@ class ResetPasswordController extends AbstractController
     private function storeTokenInSession(string $token): void
     {
         $this->container->get('request_stack')->getSession()->set('ResetPasswordPublicToken', $token);
+    }
+    
+    private function setTokenObjectInSession($resetToken): void
+    {
+        $this->container->get('request_stack')->getSession()->set('ResetPasswordPublicToken', $resetToken->getToken());
     }
 
     private function getTokenFromSession(): ?string
@@ -190,7 +199,7 @@ class ResetPasswordController extends AbstractController
             $this->addFlash('reset_password_error', sprintf(
                 'There was a problem validating your reset request - %s',
                 $e->getReason()
-            );
+            ));
             return null;
         }
     }
