@@ -16,28 +16,22 @@ class UserRepository extends ServiceEntityRepository
         parent::__construct($registry, User::class);
     }
 
-    //    /**
-    //     * @return User[] Returns an array of User objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('u')
-    //            ->andWhere('u.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('u.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?User
-    //    {
-    //        return $this->createQueryBuilder('u')
-    //            ->andWhere('u.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    /**
+     * Find unverified users that were created more than the specified number of days ago
+     *
+     * @param int $days Number of days
+     * @return array<int, User>
+     */
+    public function findUnverifiedOlderThan(int $days): array
+    {
+        $date = new \DateTimeImmutable(sprintf('-%d days', $days));
+        
+        return $this->createQueryBuilder('u')
+            ->where('u.isVerified = :verified')
+            ->andWhere('u.createdAt < :date')
+            ->setParameter('verified', false)
+            ->setParameter('date', $date)
+            ->getQuery()
+            ->getResult();
+    }
 }

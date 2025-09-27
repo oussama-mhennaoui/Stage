@@ -1,0 +1,75 @@
+{# Extend a minimal base template without navbar and footer #}
+{% extends 'base_minimal.html.twig' %}
+
+{% block title %}Email Verification Required{% endblock %}
+
+{% block body %}
+    <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8">
+            <div class="text-center">
+                <h2 class="mt-6 text-3xl font-extrabold text-gray-900">
+                    Verify Your Email Address
+                </h2>
+            </div>
+
+            <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+                <div class="rounded-md bg-blue-50 p-4 mb-6">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm font-medium text-blue-800">
+                                A verification link has been sent to your email address
+                            </h3>
+                            <div class="mt-2 text-sm text-blue-700">
+                                <p>
+                                    Please check your email and click the verification link to verify your email address.
+                                    If you did not receive the email, click the button below to resend it.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    {# Flash messages #}
+                    {% for label, messages in app.flashes %}
+                        {% for message in messages %}
+                            <div class="mb-4 p-4 rounded-md {% if label == 'success' %}bg-green-50 text-green-800{% else %}bg-red-50 text-red-800{% endif %}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                    
+                    {# Resend form #}
+                    <form action="{{ path('app_resend_verification') }}" method="post" class="space-y-6">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('resend_verification') }}">
+                        <button type="submit" 
+                                class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            Resend Verification Email
+                        </button>
+                    </form>
+                    
+                    {# Debug info (only in dev environment) #}
+                    {% if app.environment == 'dev' %}
+                        <div class="mt-4 p-3 bg-gray-100 rounded text-xs text-gray-600">
+                            <p class="font-semibold">Debug Info:</p>
+                            <p>User ID: {{ app.user.id }}</p>
+                            <p>Email: {{ app.user.email }}</p>
+                            <p>Verified: {{ app.user.isVerified ? 'Yes' : 'No' }}</p>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="mt-4 text-center">
+                    <a href="{{ path('app_logout') }}" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">
+                        Sign out
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

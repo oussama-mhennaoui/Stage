@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: EntrepriseRepository::class)]
 class Entreprise extends User
 {
-    // Inherits id from User class
+    // This class inherits all properties from User including id
 
     #[ORM\Column(length: 255)]
     private ?string $nomEntreprise = null;
@@ -33,11 +33,6 @@ class Entreprise extends User
     public function __construct()
     {
         $this->offres = new ArrayCollection();
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     public function getNomEntreprise(): ?string

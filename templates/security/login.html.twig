@@ -1,48 +1,42 @@
 {% extends 'base_auth.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}Connexion{% endblock %}
 
 {% block body %}
 <div class="auth-container">
-    <form method="post" class="auth-form">
+    <form method="post" action="{{ path('app_login') }}" class="auth-form">
         {% if error %}
             <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
         {% endif %}
 
         {% if app.user %}
             <div class="mb-3">
-                You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+                Vous êtes connecté en tant que {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Déconnexion</a>
             </div>
         {% endif %}
 
-        <h1 class="auth-title">Welcome Back</h1>
+        <h1 class="auth-title">Content de vous revoir</h1>
         
-        <label for="inputEmail">Email</label>
+        <label for="inputEmail">E-mail</label>
         <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
         
-        <label for="inputPassword">Password</label>
+        <label for="inputPassword">Mot de passe</label>
         <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
         
         <div class="text-right mt-1">
             <a href="{{ path('app_forgot_password_request') }}" class="text-sm text-blue-600 hover:text-blue-500">
-                Forgot your password?
+                Mot de passe oublié ?
             </a>
         </div>
         
-        <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
-
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" name="_remember_me"> Remember me
-            </label>
-        </div>
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
         <button class="btn" type="submit">
-            Sign in
+            Se connecter
         </button>
         
         <div class="auth-link">
-            <p>Don't have an account? <a href="{{ path('app_register') }}">Register here</a></p>
+            <p>Vous n'avez pas de compte ? <a href="{{ path('app_register') }}" class="text-blue-600 hover:text-blue-500">S'inscrire ici</a></p>
         </div>
     </form>
 </div>

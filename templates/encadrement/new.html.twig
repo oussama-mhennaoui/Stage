@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvelle demande d'encadrement{% endblock %}
+
+{% block body %}
+    <div class="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl mx-auto">
+            <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+                <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+                    <h1 class="text-xl font-semibold text-gray-900">
+                        Demande d'encadrement
+                    </h1>
+                    <p class="mt-1 text-sm text-gray-500">
+                        Enseignant : <span class="font-medium">{{ enseignant.prenom }} {{ enseignant.nom }}</span>
+                    </p>
+                    {% if enseignant.specialite %}
+                        <p class="mt-1 text-sm text-gray-500">
+                            Spécialité : {{ enseignant.specialite }}
+                        </p>
+                    {% endif %}
+                </div>
+
+                <div class="px-4 py-5 sm:p-6">
+                    {% for message in app.flashes('error') %}
+                        <div class="bg-red-50 border-l-4 border-red-400 p-4 mb-4">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm text-red-700">{{ message }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                    {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+                        <div>
+                            {{ form_label(form.cvFile, 'CV (format PDF, max 5Mo)', {
+                                'label_attr': {
+                                    'class': 'block text-sm font-medium text-gray-700 mb-1'
+                                }
+                            }) }}
+                            {{ form_widget(form.cvFile, {
+                                'attr': {
+                                    'class': 'mt-1',
+                                }
+                            }) }}
+                            {{ form_errors(form.cvFile) }}
+                            <p class="mt-2 text-sm text-gray-500">
+                                Téléchargez votre CV au format PDF. Taille maximale : 5 Mo.
+                            </p>
+                        </div>
+
+                        <div class="flex justify-end space-x-3 pt-6 border-t border-gray-200">
+                            <a href="{{ path('app_encadrement_index') }}" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                Annuler
+                            </a>
+                            <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                Envoyer la demande
+                            </button>
+                        </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

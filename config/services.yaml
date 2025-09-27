@@ -4,6 +4,7 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    upload_dir: '%kernel.project_dir%/public/uploads'
 
 services:
     # default configuration for services in *this* file
@@ -22,3 +23,14 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    # Email verification services
+    App\Security\Voter\EmailVerifiedVoter:
+        arguments: ['@security.helper']
+        tags: ['security.voter']
+        public: false
+
+    App\Security\EmailVerificationHandler:
+        arguments: ['@router']
+        tags: ['security.access_denied_handler']
+        public: false

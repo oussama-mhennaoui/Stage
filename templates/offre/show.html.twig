@@ -1,41 +1,51 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Offre{% endblock %}
+{% block title %}Détails de l'offre{% endblock %}
 
 {% block body %}
     <div class="container mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold mb-6">Offre Details</h1>
+        <h1 class="text-3xl font-bold mb-6">Détails de l'offre</h1>
 
         <div class="bg-white shadow-md rounded-lg p-6">
             <table class="min-w-full">
                 <tbody>
                     <tr class="border-b">
-                        <th class="py-2 px-4 text-left font-semibold">Id</th>
-                        <td class="py-2 px-4">{{ offre.id }}</td>
+                        <th class="py-2 px-4 text-left font-semibold">Référence</th>
+                        <td class="py-2 px-4">#{{ offre.id }}</td>
                     </tr>
                     <tr class="border-b">
-                        <th class="py-2 px-4 text-left font-semibold">Titre</th>
+                        <th class="py-2 px-4 text-left font-semibold">Titre du poste</th>
                         <td class="py-2 px-4">{{ offre.titre }}</td>
                     </tr>
                     <tr class="border-b">
-                        <th class="py-2 px-4 text-left font-semibold">Description</th>
-                        <td class="py-2 px-4">{{ offre.description }}</td>
+                        <th class="py-2 px-4 text-left font-semibold">Description du poste</th>
+                        <td class="py-2 px-4">{{ offre.description|nl2br }}</td>
                     </tr>
                     <tr class="border-b">
-                        <th class="py-2 px-4 text-left font-semibold">Duree</th>
+                        <th class="py-2 px-4 text-left font-semibold">Durée</th>
                         <td class="py-2 px-4">{{ offre.duree }}</td>
                     </tr>
                     <tr>
-                        <th class="py-2 px-4 text-left font-semibold">TypeOffre</th>
-                        <td class="py-2 px-4">{{ offre.typeOffre.value }}</td>
+                        <th class="py-2 px-4 text-left font-semibold">Type d'offre</th>
+                        <td class="py-2 px-4">{{ offre.typeOffre.value|capitalize }}</td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
-        <div class="mt-6">
-            <a href="{{ path('app_offre_index') }}" class="text-gray-600 hover:underline">back to list</a>
-            <a href="{{ path('app_offre_edit', {'id': offre.id}) }}" class="bg-yellow-500 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-yellow-600 ml-4">edit</a>
+        <div class="mt-6 flex items-center">
+            <a href="{{ path('app_offre_index') }}" class="text-blue-600 hover:underline flex items-center">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                Retour à la liste
+            </a>
+            <a href="{{ path('app_offre_edit', {'id': offre.id}) }}" class="bg-yellow-500 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-yellow-600 ml-4 flex items-center">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                </svg>
+                Modifier
+            </a>
         </div>
 
         <div class="mt-4">

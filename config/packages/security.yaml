@@ -2,6 +2,7 @@ security:
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+    
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
         # used to reload user from session & other features (e.g. switch_user)
@@ -10,38 +11,107 @@ security:
                 class: App\Entity\User
                 property: email
         users_in_memory: { memory: null }
+    
+    # Enable access decision manager for custom voters
+    enable_authenticator_manager: true
+    access_decision_manager:
+        strategy: unanimous
+        allow_if_all_abstain: false
+    
+    # Role hierarchy (if needed)
+    role_hierarchy:
+        ROLE_ADMIN: [ROLE_USER, ROLE_ALLOWED_TO_SWITCH]
+        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+        ROLE_DIPLOME: [ROLE_USER]  # Add this line to ensure ROLE_DIPLOME has basic user rights
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+            
         main:
             lazy: true
             provider: app_user_provider
-            custom_authenticator: App\Security\AppAuthenticator
+            entry_point: App\Security\AppAuthenticator
+            custom_authenticators: [App\Security\AppAuthenticator]
+            
+            # Logout configuration
             logout:
                 path: app_logout
-                # where to redirect after logout
-                # target: app_any_route
-
+                target: app_home
+                invalidate_session: true
+                delete_cookies:
+                    PHPSESSID: { path: '/', domain: null, secure: false, samesite: 'lax' }
+                    REMEMBERME: { path: '/', domain: null, secure: false, samesite: 'lax' }
+            
+            # Remember me configuration
             remember_me:
                 secret: '%kernel.secret%'
-                lifetime: 604800
+                lifetime: 2592000  # 30 days in seconds
                 path: /
-                # by default, the feature is enabled by checking a checkbox in the
-                # login form, uncomment the following line to always enable it.
-                #always_remember_me: true
+                domain: ~  # Defaults to the current domain from $_SERVER
+                secure: false  # Disable secure cookies in development
+                httponly: true
+                samesite: 'lax'
+                name: 'REMEMBERME'
+            
+            # Login throttling - requires rate_limiter configuration
+            # Uncomment and configure rate_limiter in framework.yaml if needed
+            # login_throttling:
+            #     limiter: app.login_limiter
+            
+            # Access denied handler
+            access_denied_handler: App\Security\EmailVerificationHandler
+            
+            # Enable switch user feature (for admin users)
+            # switch_user: { role: ROLE_ALLOWED_TO_SWITCH }
 
-            # activate different ways to authenticate
-            # https://symfony.com/doc/current/security.html#the-firewall
-
-            # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
-
-    # Easy way to control access for large sections of your site
-    # Note: Only the *first* access control that matches will be used
+    # Access control configuration
+    # Note: Rules are checked in order and the first matching rule is used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        # Public assets and system routes (no authentication required)
+        - { path: ^/build, roles: PUBLIC_ACCESS }
+        - { path: ^/css/, roles: PUBLIC_ACCESS }
+        - { path: ^/js/, roles: PUBLIC_ACCESS }
+        - { path: ^/images/, roles: PUBLIC_ACCESS }
+        - { path: ^/uploads/, roles: PUBLIC_ACCESS }
+        - { path: ^/favicon.ico$, roles: PUBLIC_ACCESS }
+        - { path: ^/robots.txt$, roles: PUBLIC_ACCESS }
+        - { path: ^/sitemap.xml$, roles: PUBLIC_ACCESS }
+        - { path: ^/_wdt/, roles: PUBLIC_ACCESS }  # Web Debug Toolbar
+        - { path: ^/_profiler/, roles: PUBLIC_ACCESS }  # Profiler
+        - { path: ^/_error, roles: PUBLIC_ACCESS }  # Error pages
+        - { path: ^/_fragment, roles: PUBLIC_ACCESS }  # ESI fragments
+        - { path: ^/api/doc, roles: PUBLIC_ACCESS }  # API documentation
+        - { path: ^/api/login, roles: PUBLIC_ACCESS }  # API login endpoint
+        - { path: ^/api/token/refresh, roles: PUBLIC_ACCESS }  # API token refresh
+
+        # Authentication routes (public)
+        - { path: ^/login$, roles: PUBLIC_ACCESS }
+        - { path: ^/register, roles: PUBLIC_ACCESS }
+        - { path: ^/forgot-password, roles: PUBLIC_ACCESS }
+        - { path: ^/reset-password, roles: PUBLIC_ACCESS }
+        - { path: ^/verify/email, roles: PUBLIC_ACCESS }
+        - { path: ^/verification/notice, roles: PUBLIC_ACCESS }
+        - { path: ^/resend-verification, roles: PUBLIC_ACCESS }
+        - { path: ^/email, roles: PUBLIC_ACCESS }  # Email templates
+        
+        # Student and graduate routes - allow both ROLE_ETUDIANT and ROLE_DIPLOME
+        - { path: ^/mes-candidatures, roles: [ROLE_ETUDIANT, ROLE_DIPLOME, ROLE_DIPLOME] }
+        
+        # Admin area (bypasses email verification)
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        
+        # API endpoints (if applicable)
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY, ips: [127.0.0.1, ::1] }
+        
+        # Protected routes that require email verification
+        - { path: ^/profile, roles: IS_AUTHENTICATED_FULLY, requires_channel: https }
+        - { path: ^/dashboard, roles: IS_AUTHENTICATED_FULLY, requires_channel: https }
+        - { path: ^/account, roles: IS_AUTHENTICATED_FULLY, requires_channel: https }
+        - { path: ^/settings, roles: IS_AUTHENTICATED_FULLY, requires_channel: https }
+        
+        # Catch-all route - requires authentication and email verification
+        - { path: ^/, roles: IS_AUTHENTICATED_FULLY, requires_channel: https }
 
 when@test:
     security:

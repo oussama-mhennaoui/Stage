@@ -7,12 +7,23 @@
 <!-- Debug: Form start with data-controller="#{form_attr['data-controller']}" -->
     <div class="space-y-6">
         <div>
-            {{ form_label(form.titre, 'Titre', {'label_attr': {'class': 'block text-gray-700 font-bold mb-2'}}) }}
-            {{ form_widget(form.titre, {'attr': {'class': 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}}) }}
+            {{ form_label(form.titre, 'Titre de l\'offre', {'label_attr': {'class': 'block text-gray-700 font-bold mb-2'}}) }}
+            {{ form_widget(form.titre, {
+                'attr': {
+                    'class': 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline',
+                    'placeholder': 'Entrez le titre de l\'offre'
+                }
+            }) }}
         </div>
         <div>
-            {{ form_label(form.description, 'Description', {'label_attr': {'class': 'block text-gray-700 font-bold mb-2'}}) }}
-            {{ form_widget(form.description, {'attr': {'class': 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline', 'rows': 4}}) }}
+            {{ form_label(form.description, 'Description détaillée', {'label_attr': {'class': 'block text-gray-700 font-bold mb-2'}}) }}
+            {{ form_widget(form.description, {
+                'attr': {
+                    'class': 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline',
+                    'rows': 4,
+                    'placeholder': 'Décrivez en détail le poste et les missions'
+                }
+            }) }}
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
@@ -35,9 +46,12 @@
                 <!-- Debug: Type Offre field with data-action="#{type_offre_attr['data-action']}" -->
             </div>
         </div>
-        <div class="flex justify-end">
+        <div class="flex justify-end space-x-4">
+            <a href="{{ path('app_offre_index') }}" class="bg-gray-400 text-white px-6 py-2 rounded-md text-sm font-medium hover:bg-gray-500 transition-colors">
+                Annuler
+            </a>
             <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors">
-                {{ button_label|default('Save') }}
+                {{ button_label|default('Enregistrer') }}
             </button>
         </div>
     </div>

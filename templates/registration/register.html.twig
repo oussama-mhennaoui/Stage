@@ -149,37 +149,3 @@
     </div>
 {% endblock %}
 
-{% block javascripts %}
-    {{ parent() }}
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const userTypeRadios = document.querySelectorAll('input[name="registration_form[userType]"]');
-            
-            function showCorrectFields() {
-                // Find the currently selected user type
-                const selectedType = document.querySelector('input[name="registration_form[userType]"]:checked')?.value;
-
-                // Hide all conditional sections first
-                document.querySelectorAll('.user-type-fields').forEach(field => {
-                    field.style.display = 'none';
-                });
-
-                // If a type is selected, show the matching sections
-                if (selectedType) {
-                    document.querySelectorAll('.user-type-' + selectedType).forEach(field => {
-                        field.style.display = 'block';
-                    });
-                }
-            }
-
-            // When a radio button is changed, update the form
-            userTypeRadios.forEach(radio => {
-                radio.addEventListener('change', showCorrectFields);
-            });
-
-            // Force the check to run after a very short delay
-            // This helps ensure it runs after the browser has processed the form's state on reload
-            setTimeout(showCorrectFields, 50);
-        });
-    </script>
-{% endblock %}

@@ -9,11 +9,23 @@
             <div class="hidden md:flex items-center space-x-4">
     <a href="{{ path('app_offre_public') }}" class="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium">Offres</a>
                 {% if app.user %}
-                    <a href="{{ path('app_admin') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
                     {% if is_granted('ROLE_ENTREPRISE') %}
-                        <a href="{{ path('app_offre_index') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Manage Offers</a>
+                        <a href="{{ path('app_offre_index') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Gérer les offres</a>
                     {% elseif is_granted('ROLE_ETUDIANT') or is_granted('ROLE_DIPLOME') %}
                         <a href="{{ path('app_mes_candidatures') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Mes Candidatures</a>
+                        {% if is_granted('ROLE_ETUDIANT') %}
+                            <a href="{{ path('app_encadrement_index') }}" class="text-gray-700 hover:text-indigo-600 px-3 py-2 text-sm font-medium">Encadrement</a>
+                            <a href="{{ path('app_encadrement_student_applications') }}" class="text-gray-700 hover:text-indigo-600 px-3 py-2 text-sm font-medium">Mes demandes</a>
+                        {% endif %}
+                    {% endif %}
+                    
+                    {% if is_granted('ROLE_ENSEIGNANT') %}
+                        <a href="{{ path('app_encadrement_teacher_requests') }}" class="text-gray-700 hover:text-indigo-600 px-3 py-2 text-sm font-medium flex items-center">
+                            <svg class="w-5 h-5 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                            </svg>
+                            Demandes d'encadrement
+                        </a>
                     {% endif %}
                     <div class="relative" id="user-menu">
                         <button id="user-menu-button" class="flex items-center space-x-2 text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium focus:outline-none">
@@ -31,8 +43,8 @@
                     </div>
 
                 {% else %}
-                    <a href="{{ path('app_login') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Sign In</a>
-                    <a href="{{ path('app_register') }}" class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700">Sign Up</a>
+                    <a href="{{ path('app_login') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Connexion</a>
+                    <a href="{{ path('app_register') }}" class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700">S'inscrire</a>
                 {% endif %}
             </div>
         </div>

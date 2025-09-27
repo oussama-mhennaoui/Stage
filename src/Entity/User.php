@@ -14,11 +14,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ORM\InheritanceType("JOINED")]
 #[ORM\DiscriminatorColumn(name: "dtype", type: "string")]
 #[ORM\DiscriminatorMap([
-    "user" => User::class,
-    "etudiant" => Etudiant::class,
-    "diplome" => Diplome::class,
-    "enseignant" => Enseignant::class,
-    "entreprise" => Entreprise::class
+    "user" => "User",
+    "etudiant" => "Etudiant",
+    "diplome" => "Diplome",
+    "enseignant" => "Enseignant",
+    "entreprise" => "Entreprise"
 ])]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -48,12 +48,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     private bool $isVerified = false;
-
+    
+    #[ORM\Column(type: 'datetime_immutable')]
+    private ?\DateTimeImmutable $createdAt = null;
+    
     #[ORM\OneToMany(mappedBy: 'candidat', targetEntity: Candidature::class, orphanRemoval: true)]
     private Collection $candidatures;
 
     public function __construct()
     {
+        $this->createdAt = new \DateTimeImmutable();
         $this->candidatures = new ArrayCollection();
     }
 
@@ -123,6 +127,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return array_unique($roles);
     }
+    
+    /**
+     * Gets the user type based on the class name.
+     *
+     * @return string
+     */
+    public function getUserType(): string
+    {
+        $class = get_class($this);
+        $parts = explode('\\', $class);
+        $className = end($parts);
+        
+        // Return the lowercase class name without the namespace
+        return strtolower($className);
+    }
+    
+    /**
+     * Get the user's full name (first name + last name)
+     *
+     * @return string
+     */
+    public function getFullName(): string
+    {
+        return trim(sprintf('%s %s', $this->prenom, $this->Nom));
+    }
 
     public function setRoles(array $roles): self
     {
@@ -151,6 +180,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function isVerified(): bool
     {
         return $this->isVerified;
+    }
+    
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+    
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+        return $this;
     }
 
     public function setIsVerified(bool $isVerified): static

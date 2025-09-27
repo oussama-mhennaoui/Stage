@@ -1,23 +1,23 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Offre index{% endblock %}
+{% block title %}Gestion des offres{% endblock %}
 
 {% block body %}
     <div class="container px-4 py-8">
-        <h1 class="text-3xl font-bold mb-6">Manage Offers</h1>
+        <h1 class="text-3xl font-bold mb-6">Gestion des offres</h1>
 
-        <a href="{{ path('app_offre_new') }}" class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 mb-4 inline-block">Create new</a>
+        <a href="{{ path('app_offre_new') }}" class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 mb-4 inline-block">Créer une nouvelle offre</a>
 
         <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
             <thead class="bg-gray-200">
                 <tr>
-                    <th class="py-3 px-4 text-left">Id</th>
+                    <th class="py-3 px-4 text-left">ID</th>
                     <th class="py-3 px-4 text-left">Titre</th>
                     <th class="py-3 px-4 text-left">Description</th>
-                    <th class="py-3 px-4 text-left">Duree</th>
-                    <th class="py-3 px-4 text-left">TypeOffre</th>
+                    <th class="py-3 px-4 text-left">Durée</th>
+                    <th class="py-3 px-4 text-left">Type d'offre</th>
                     <th class="py-3 px-4 text-left">Candidatures</th>
-                        <th class="py-3 px-4 text-left">Actions</th>
+                    <th class="py-3 px-4 text-left">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -32,7 +32,7 @@
                             <a href="{{ path('app_offre_candidatures', {'id': offre.id}) }}" class="bg-indigo-600 text-white px-3 py-1 rounded-md text-sm hover:bg-indigo-700">Voir ({{ offre.candidatures|length }})</a>
                         </td>
                         <td class="py-3 px-4 flex items-center">
-                        <a href="{{ path('app_offre_edit', {'id': offre.id}) }}" class="text-yellow-600 hover:underline">edit</a>
+                        <a href="{{ path('app_offre_edit', {'id': offre.id}) }}" class="text-yellow-600 hover:underline">Modifier</a>
                         <div class="ml-2">
                             {{ include('offre/_delete_form.html.twig') }}
                         </div>
@@ -40,7 +40,7 @@
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="6" class="py-3 px-4 text-center">no records found</td>
+                    <td colspan="7" class="py-3 px-4 text-center">Aucune offre trouvée</td>
                 </tr>
             {% endfor %}
             </tbody>

@@ -4,10 +4,20 @@ namespace App\Entity;
 
 use App\Repository\EnseignantRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: EnseignantRepository::class)]
 class Enseignant extends User
 {
+    #[ORM\OneToMany(mappedBy: 'enseignant', targetEntity: Encadrement::class, orphanRemoval: true)]
+    private Collection $encadrements;
+
+    public function __construct()
+    {
+        $this->encadrements = new ArrayCollection();
+    }
+
     #[ORM\Column(length: 255)]
     private ?string $specialite = null;
 

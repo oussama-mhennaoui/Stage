@@ -21,7 +21,10 @@ class CandidatureController extends AbstractController
     #[Route('/mes-candidatures', name: 'app_mes_candidatures', methods: ['GET'])]
     public function mesCandidatures(CandidatureRepository $candidatureRepository): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ETUDIANT');
+        // Check if user has either ROLE_ETUDIANT or ROLE_DIPLOME
+        if (!$this->isGranted('ROLE_ETUDIANT') && !$this->isGranted('ROLE_DIPLOME')) {
+            throw $this->createAccessDeniedException('Accès refusé. Cette page est réservée aux étudiants et diplômés.');
+        }
         
         $candidatures = $candidatureRepository->findBy(
             ['candidat' => $this->getUser()],
